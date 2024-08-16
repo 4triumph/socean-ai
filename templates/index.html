@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>鱼种识别</title>
+  <link rel="shortcut icon" href="../static/favicon.ico">
+  <style>
+    body {
+        background-image: url("../static/bg.jpg");
+        background-repeat: no-repeat;
+        background-size: 100% 200%;
+    }
+
+    .header{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px 100px;
+        background: #0B0F2A;
+        z-index: 2000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .logo{
+        font-size: 32px;
+        color: #fffefe;
+        text-decoration: none;
+        font-weight: 700;
+    }
+    .logo span{
+        color: #1e72c7;
+    }
+    .navbar {
+        margin-right: 200px; /* 调整导航栏与页面右侧的距离 */
+    }
+    .navbar a{
+        transition: all 0.3s ease 0s;
+        position: relative;
+        font-size: 18px;
+        color: #fff;
+        font-weight: 500;
+        text-decoration: none;
+        margin-left: 40px;
+    }
+    .navbar a:hover{
+        color: #0050bd;
+    }
+    .navbar .menu-item.active {
+        background-color: #0050bd;
+        border-radius: 20px;
+        padding: 10px 20px;
+    }
+    h1 {
+        margin-top: 10%;
+        text-align: center;
+    }
+    form{
+      margin: auto;
+      width: 50%;
+      padding: 10px;
+      text-align: center;
+    }
+    .result p{
+      font-weight: bold;
+    }
+    button {
+      background-color: #ff4800;
+      border: none;
+      padding: 10px 20px;
+      text-decoration: none;
+      margin: 20px 0;
+      border-radius: 5px;
+      color: white;
+    }
+    button:hover {
+      box-shadow: 0 0 25px orangered;
+      box-reflect: below 1px linear-gradient(transparent,rgba(0,0,0,0.3));
+    }
+    input[type="button"] {
+      background-color: #ff4800;
+      border: none;
+      padding: 10px 20px;
+      text-decoration: none;
+      margin: 20px 0;
+      border-radius: 5px;
+      color: white;
+    }
+    input[type="button"]:hover {
+      box-shadow: 0 0 25px orangered;
+      box-reflect: below 1px linear-gradient(transparent,rgba(0,0,0,0.3));
+    }
+    main {
+      width: 90%; /* 修改此处 */
+      height: 50%;
+      display: flex; /* 添加此行 */
+      justify-content: space-between; /* 添加此行 */
+      align-items: center; /* 添加此行 */
+      margin: auto;
+      padding: 1%;
+    }
+    #s1 {
+      width: 650px; /* 修改此处 */
+      height: 500px; /* 修改此处 */
+      background-blend-mode: normal, soft-light;
+      -webkit-backdrop-filter: blur(50px);
+      border-radius: 20px;
+      background-color: rgba(255, 255, 255, 0.3);
+      text-align: center;
+      padding: 3%;
+    }
+
+    #uploadedImage {
+      max-width: 90%; /* 图片最大宽度为父容器宽度的90% */
+      max-height: 90%; /* 图片最大高度为父容器高度的90% */
+      width: auto; /* 图片宽度自动调整 */
+      height: auto; /* 图片高度自动调整 */
+      margin: 5%; /* 图片与框之间的距离 */
+    }
+
+    #s2 {
+      width: 650px; /* 修改此处 */
+      height: 500px; /* 修改此处 */
+      background-blend-mode: normal, soft-light;
+      -webkit-backdrop-filter: blur(50px);
+      border-radius: 20px;
+      background-color: rgba(255, 255, 255, 0.3);
+      text-align: center;
+      padding: 3%;
+    }
+    .fish-description {
+      text-align: left; /* 将文本左对齐 */
+    }
+
+  </style>
+
+  <script>
+    function clickFile() {
+      const input = document.querySelector('#uploadFile')
+      input.click()
+    }
+  </script>
+
+</head>
+<body>
+    <header class="header">
+    <a href="#" class="logo">海洋<span>之窗</span></a>
+
+    <nav class="navbar">
+        <a href="http://wocean.xyz/index.html" class="menu-item" onclick="window.location.href='http://wocean.xyz/index.html'">主页</a>
+        <a href="http://wocean.xyz/ChinaCatalogue.html" class="menu-item" onclick="window.location.href='http://wocean.xyz/ChinaCatalogue.html'">中国水域监测</a>
+        <a href="http://wocean.xyz/cu.html" class="menu-item" onclick="window.location.href='http://wocean.xyz/Caculate.html'">全球生态可视化</a>
+        <a href="http://wocean.xyz/environment.html" class="menu-item" onclick="window.location.href='http://wocean.xyz/cu.html'">海洋保护</a>
+        <a href="http://wocean.xyz/Caculate.html" class="menu-item" onclick="window.location.href='http://wocean.xyz/Caculate.html'">塑料足迹</a>
+
+        <a href="#" class="menu-item active" onclick="redirectToExternalLink()">鱼种识别</a>
+
+    </nav>
+</header>
+<header>
+  <h1>鱼种识别</h1>
+</header>
+
+<main> <!-- 修改此处 -->
+    <section id="s1">
+        <img id="uploadedImage" src="{{ image_url }}" alt="">
+    </section>
+    <section id="s2"> <!-- 修改此处 -->
+        {% if result %}
+            <div class="result">
+                 <p style="font-size: 25px;">这张图片上的鱼是 {{ result }}</p>
+                 <p style="text-align: left;font-size: 18px;">{{ fish_description }}</p>
+            </div>
+        {% endif %}
+    </section>
+</main> <!-- 修改此处 -->
+
+<form enctype="multipart/form-data" method="POST" action="/upload">
+    <input type="hidden" name="MAX_FILE_SIZE" value="100000">
+    <input id="uploadFile" type="file" name="image" onchange="previewImage()"style="display: none;">
+    <input type="button" value="上传图片" class="btn" onclick="clickFile()">
+    <button type="submit">查询</button>
+</form>
+
+<script>
+function previewImage() {
+    var fileInput = document.getElementById('uploadFile');
+    var uploadedImage = document.getElementById('uploadedImage');
+
+    if (fileInput.files && fileInput.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            uploadedImage.src = e.target.result;
+            uploadedImage.style.maxWidth = "80%"; // 设置图片最大宽度为100%
+            uploadedImage.style.maxHeight = "80%"; // 设置图片最大高度为100%
+        }
+
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        uploadedImage.src = '';
+    }
+}
+
+</script>
+
+</body>
+</html>
